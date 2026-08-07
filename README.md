@@ -12,7 +12,7 @@
 > ### ⚠️ &nbsp;reed is **not** on npm or npx
 >
 > There is no `npm install reed` and no `npx reed`. Anything by that name on npm is **not us**.
-> Install with the script below, or with `brew` — those are the only two places reed comes from.
+> Install with one of the commands below — those are the only places reed comes from.
 
 [What you need](#what-you-need) · [Install](#install) · [60 seconds](#60-seconds) · [How it works](#how-it-works) · [Why it's different](#why-its-different)
 
@@ -77,23 +77,33 @@ the workspace plus its changes.
 
 ## Install
 
+**macOS · Linux**
+
 ```sh
-curl -fsSL https://raw.githubusercontent.com/ReedKeep/reed/main/install.sh | sh     # macOS · Linux
+curl -fsSL https://raw.githubusercontent.com/ReedKeep/reed/main/install.sh | sh && reed up
 ```
+
+**Homebrew** — the formula lives in this repo, so `tap` takes the URL:
+
+```sh
+brew tap ReedKeep/reed https://github.com/ReedKeep/reed && brew trust reedkeep/reed && brew install reed && reed up
+```
+
+**Windows**
 
 ```powershell
-irm https://raw.githubusercontent.com/ReedKeep/reed/main/install.ps1 | iex       # Windows
+irm https://raw.githubusercontent.com/ReedKeep/reed/main/install.ps1 | iex; reed up
 ```
 
-Then, once per machine:
+Each of those is one line you can paste. `reed up` is the only thing you run per machine — it starts at
+login and survives a reboot.
 
-```sh
-reed up
-```
+You can read [`install.sh`](install.sh) before you pipe it into a shell — it's short, and it checks the
+SHA-256 of what it downloads against a published list before anything is written to your disk.
 
-That's it. It starts at login and survives a reboot. You can read
-[`install.sh`](install.sh) before you pipe it into a shell — it's short, and it checks the SHA-256 of what it
-downloads against a signed list before anything is written.
+> `brew trust` is asked for once. Homebrew only skips it for taps in a repo literally named
+> `homebrew-something`, and reed keeps its formula [here](Formula/reed.rb) rather than in a second
+> repository — one place to look, one extra word to type.
 
 ## 60 seconds
 
