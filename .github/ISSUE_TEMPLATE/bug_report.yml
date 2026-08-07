@@ -1,0 +1,39 @@
+name: Something is broken
+description: reed did the wrong thing, or would not do the right one.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time. One thing before you start: **run `reed doctor`** and paste what it
+        says below. It exists to make this exact conversation short, and it usually names the answer.
+  - type: textarea
+    id: doctor
+    attributes:
+      label: "`reed doctor`"
+      description: The whole output, please — the first BAD is usually the one to fix, and the lines above it are what makes that readable.
+      render: shell
+    validations: { required: true }
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you typed, what you expected, and what you got. Exact text beats a description.
+      placeholder: |
+        $ reed merge mini
+        ...
+    validations: { required: true }
+  - type: input
+    id: machines
+    attributes:
+      label: The machines involved
+      description: Which sent, which received, and what they are.
+      placeholder: "MacBook (macOS 15, arm64) -> Ubuntu 22.04 x86_64"
+    validations: { required: true }
+  - type: dropdown
+    id: data
+    attributes:
+      label: Did anything go missing or get overwritten?
+      description: If yes we treat this as urgent — reed's first promise is that it cannot lose a byte.
+      options: ["No", "Yes — a file changed or vanished that I did not change"]
+    validations: { required: true }
