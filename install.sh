@@ -22,7 +22,7 @@
 
 set -eu
 
-REPO="${REED_REPO:-reed-sh/reed}"
+REPO="${REED_REPO:-ReedKeep/reed}"
 VERSION="${REED_VERSION:-latest}"
 
 main() {

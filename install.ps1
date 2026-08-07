@@ -18,7 +18,7 @@
 
 $ErrorActionPreference = 'Stop'
 
-$repo    = if ($env:REED_REPO)    { $env:REED_REPO }    else { 'reed-sh/reed' }
+$repo    = if ($env:REED_REPO)    { $env:REED_REPO }    else { 'ReedKeep/reed' }
 $version = if ($env:REED_VERSION) { $env:REED_VERSION } else { 'latest' }
 $dir     = if ($env:REED_INSTALL_DIR) { $env:REED_INSTALL_DIR } else { "$env:LOCALAPPDATA\reed\bin" }
 
