@@ -9,6 +9,11 @@
 
 **One folder. Every machine you own. Nothing to think about.**
 
+> ### ⚠️ &nbsp;reed is **not** on npm or npx
+>
+> There is no `npm install reed` and no `npx reed`. Anything by that name on npm is **not us**.
+> Install with the script below, or with `brew` — those are the only two places reed comes from.
+
 [What you need](#what-you-need) · [Install](#install) · [60 seconds](#60-seconds) · [How it works](#how-it-works) · [Why it's different](#why-its-different)
 
 </div>
@@ -58,8 +63,12 @@ your own between two machines, that's the one to let through.
 
 ### 3 · A supported machine, and somewhere to put things
 
-macOS (12+), Linux (glibc 2.31+), or Windows 10/11. reed keeps its history in `~/.reed`, so that has to be
-writable and have room — a workspace's history is roughly the size of the workspace plus its changes.
+macOS (12+, Intel or Apple Silicon), Linux x86_64 (glibc 2.31+), or Windows 10/11 x86_64. reed keeps its
+history in `~/.reed`, so that has to be writable and have room — a workspace's history is roughly the size of
+the workspace plus its changes.
+
+**Linux on ARM is not built yet.** The code is portable and there is simply no machine here to build it on;
+`cargo install --path crates/reed` works if you have the source.
 
 **Not required:** node, npm, git, Docker, a package manager, or anything else. reed is one binary.
 
