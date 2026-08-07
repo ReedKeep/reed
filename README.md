@@ -1,6 +1,11 @@
 <div align="center">
 
-# reed
+<!-- The white mark on a dark theme, the black one on a light theme. GitHub honours prefers-color-scheme
+     inside <picture>, and the <img> is the fallback for anything that does not. -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/reed-on-dark.svg">
+  <img src="assets/reed-on-light.svg" alt="reed" width="200" height="200">
+</picture>
 
 **One folder. Every machine you own. Nothing to think about.**
 
@@ -126,17 +131,41 @@ Three machines, four independent links, 2,880 more operations: all three folders
 
 No round trip to anywhere. On a LAN, a save is on the other machine before you've looked up.
 
-## Honest limits
+## What's not built yet
 
-We'd rather you read these here than find them yourself.
+Not the launch checklist — the **core**. These are real holes in the product, ranked by how likely they are
+to matter to you. We'd rather you read them here than find them at eleven at night.
 
-- **Tailscale is the network.** No relay, no NAT traversal of our own, no accounts. Machines that aren't on
-  a tailnet can't be reached.
-- **Everything is sent.** No lazy materialisation yet, so a first sync moves the whole folder.
-- **`.gitignore` isn't read yet.** Exclusions are a name list you can edit; sensible defaults ship.
-- **Code directories.** Not general-purpose file sync, and not a backup.
-- **macOS and Linux are the daily drivers.** Windows works and is tested; it's the newest of the three.
-- **Not notarised on macOS yet**, so Gatekeeper will ask the first time.
+**Secrets are not special.** reed has no rule for `.env` or anything like it, so those files sync between
+your machines like every other file. Between machines you own that is often what you want, and it is
+absolutely not what you want by accident. Until there's a real policy, add the name to your exclusions.
+
+**`.gitignore` is not read.** Exclusions are a list of names — `.git`, `target`, `node_modules`, a sensible
+default set you can edit. That covers most of it and it is not the same thing, and if you are the kind of
+person who curates a `.gitignore` you will notice within a minute.
+
+**Everything is sent.** There's no lazy materialisation, so the first sync of a folder moves all of it. On a
+LAN that's fine. Across an ocean it is the difference between *instant* and *four minutes*, and it is the
+single biggest thing between reed and what reed is supposed to feel like.
+
+**Time travel has an engine and no handle.** Every version of every file is already kept, and
+`reed restore` puts the whole folder back. Putting *one file* back to *one moment* — the thing you actually
+want at eleven at night — is not built.
+
+**A forkable workspace is a primitive, not a command.** Copy the whole tree including uncommitted work, let
+something run in it for real, keep it or throw the world away. Measured at **256 MiB in 0.3 ms consuming
+nothing** — and there is no `reed branch` to reach it with.
+
+**reed tells you what to install; it doesn't install it.** When a `node_modules` arrives from another
+platform you get a named list of what needs building. Running it is still your job, once per platform.
+
+**Nothing understands your code.** A folder that could answer *"what changed since I was last here, and what
+did it mean"* — a function moved, a test now fails — is the thing that would make this indispensable to
+anything automated. It does not exist. It is the most interesting thing on this list and the furthest away.
+
+And the smaller true things: Tailscale is the network, so machines off your tailnet cannot be reached; this
+is for code directories and is not a backup; macOS and Linux are the daily drivers and Windows is the
+newest of the three; and macOS builds are not notarised yet, so Gatekeeper will ask the first time.
 
 ## Is this open source?
 
@@ -145,22 +174,10 @@ We'd rather you read these here than find them yourself.
 **Two people build reed.** That's the whole team. Nobody else is working on this, and that single fact
 explains both halves of what you're looking at: how much is already here, and why the source isn't yet.
 
-What's shipped is the floor, not the building. Everything above it is in progress right now:
-
-- **Files that are there before the bytes are.** The folder exists on every machine the instant it's
-  created; content arrives when you touch it. That's what makes "it's already on my other box" true across
-  an ocean instead of just across a room.
-- **Scrub any file to any second.** The engine under it is done — every version of everything is already
-  kept. What's left is the part you actually touch.
-- **A workspace you can fork.** Branch the whole tree *including uncommitted work*, let something run in it
-  for real, keep it or throw the world away. The primitive is built and measured: **256 MiB forked in
-  0.3 ms, consuming nothing.**
-- **A workspace that knows what changed and what it meant.** Not a byte diff — *this function moved, that
-  test now fails*. The thing an agent should be able to ask a folder when it joins on a new machine.
-
-Every one of those changes the on-disk format or the wire, and a format is a promise. Opening the source at
-the exact moment those are landing means asking people to build on shapes we're still moving — which is a
-worse gift than waiting.
+What's shipped is the floor, not the building. [What's not built yet](#whats-not-built-yet) is the honest
+list, and every item on it changes the on-disk format or the wire. A format is a promise. Opening the
+source at the exact moment those are landing means asking people to build on shapes we are still moving,
+which is a worse gift than waiting.
 
 So: **the source opens.** Not as a favour and not as a maybe. Watch this repo and you'll know the day.
 
