@@ -1,7 +1,7 @@
 #!/bin/sh
 # reed — one folder, on every machine you own.
 #
-#   curl -fsSL https://reed.sh/install | sh
+#   curl -fsSL https://raw.githubusercontent.com/ReedKeep/reed/main/install.sh | sh
 #
 # What this does, in order: works out which build you need, downloads it, checks its SHA-256 against the
 # signed checksum list, and puts one binary on your PATH. It installs nothing else, writes nothing into your
@@ -41,7 +41,7 @@ main() {
             ;;
         MINGW* | MSYS* | CYGWIN*)
             die "this is the Unix installer. On Windows, run this in PowerShell instead:
-      irm https://reed.sh/install.ps1 | iex"
+      irm https://raw.githubusercontent.com/ReedKeep/reed/main/install.ps1 | iex"
             ;;
         *) die "reed has no build for $os yet. Build it from source: cargo install --path crates/reed" ;;
     esac

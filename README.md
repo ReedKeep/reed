@@ -69,11 +69,11 @@ writable and have room — a workspace's history is roughly the size of the work
 ## Install
 
 ```sh
-curl -fsSL https://reed.sh/install | sh     # macOS · Linux
+curl -fsSL https://raw.githubusercontent.com/ReedKeep/reed/main/install.sh | sh     # macOS · Linux
 ```
 
 ```powershell
-irm https://reed.sh/install.ps1 | iex       # Windows
+irm https://raw.githubusercontent.com/ReedKeep/reed/main/install.ps1 | iex       # Windows
 ```
 
 Then, once per machine:

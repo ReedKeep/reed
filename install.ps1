@@ -1,6 +1,6 @@
 # reed — one folder, on every machine you own.
 #
-#   irm https://reed.sh/install.ps1 | iex
+#   irm https://raw.githubusercontent.com/ReedKeep/reed/main/install.ps1 | iex
 #
 # The Windows half of `dist/install.sh`, and it exists as its own file rather than as a branch of that one
 # because a single script spanning `sh` and PowerShell is two dialects disagreeing about quoting — which is
@@ -44,7 +44,7 @@ if (Test-Path $exe) {
 $exe is running, and Windows will not let it be replaced while it is.
       Stop it, install, and start it again:
           reed down
-          irm https://reed.sh/install.ps1 | iex
+          irm https://raw.githubusercontent.com/ReedKeep/reed/main/install.ps1 | iex
           reed up
 "@
     }
