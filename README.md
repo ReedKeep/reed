@@ -140,18 +140,32 @@ We'd rather you read these here than find them yourself.
 
 ## Is this open source?
 
-**Not yet — and we'd like it to be.**
+**Not yet. It will be — and it's worth saying exactly why not, because it isn't a moat.**
 
-reed is a small team building something where the hard part is the part you can't see: the merge, the
-crash-safety, the per-platform build handling, the twenty-three rounds of trying to destroy our own work.
-Getting that right in the open, before it's finished, would mean shipping a half-answer to a problem where a
-half-answer loses somebody's afternoon.
+**Two people build reed.** That's the whole team. Nobody else is working on this, and that single fact
+explains both halves of what you're looking at: how much is already here, and why the source isn't yet.
 
-So: **the source will open. There's a lot still to build first.** Sorry for the wait — it's not a moat, it's
-a schedule. Watch this repo and you'll know the day it happens.
+What's shipped is the floor, not the building. Everything above it is in progress right now:
 
-In the meantime everything else lives here: releases, the install scripts, issues, and the changelog. File
-a bug and a human reads it.
+- **Files that are there before the bytes are.** The folder exists on every machine the instant it's
+  created; content arrives when you touch it. That's what makes "it's already on my other box" true across
+  an ocean instead of just across a room.
+- **Scrub any file to any second.** The engine under it is done — every version of everything is already
+  kept. What's left is the part you actually touch.
+- **A workspace you can fork.** Branch the whole tree *including uncommitted work*, let something run in it
+  for real, keep it or throw the world away. The primitive is built and measured: **256 MiB forked in
+  0.3 ms, consuming nothing.**
+- **A workspace that knows what changed and what it meant.** Not a byte diff — *this function moved, that
+  test now fails*. The thing an agent should be able to ask a folder when it joins on a new machine.
+
+Every one of those changes the on-disk format or the wire, and a format is a promise. Opening the source at
+the exact moment those are landing means asking people to build on shapes we're still moving — which is a
+worse gift than waiting.
+
+So: **the source opens.** Not as a favour and not as a maybe. Watch this repo and you'll know the day.
+
+Everything else is already here: releases, the install scripts you can read before you pipe them into a
+shell, issues, and the changelog. File a bug and one of the two of us reads it.
 
 ## Get in touch
 
