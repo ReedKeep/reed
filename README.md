@@ -9,7 +9,7 @@
 
 **One folder. Every machine you own. Nothing to think about.**
 
-[Install](#install) · [60 seconds](#60-seconds) · [How it works](#how-it-works) · [Why it's different](#why-its-different) · [Limits](#honest-limits)
+[What you need](#what-you-need) · [Install](#install) · [60 seconds](#60-seconds) · [How it works](#how-it-works) · [Why it's different](#why-its-different)
 
 </div>
 
@@ -22,6 +22,49 @@ machines agree, either — when you've both been editing, the other machine's wo
 look at first**, and you take it when you're ready.
 
 No cloud. No account. No server we run. Your machines talk to each other.
+
+## What you need
+
+Three things, and the first one is the one that matters.
+
+### 1 · Tailscale, on every machine, signed in as you
+
+**This is not optional and it is not a suggestion — it is how reed works at all.**
+
+reed has no server. There is no account to make and nothing of yours passes through us, because there is no
+"us" in the path: your machines open a connection directly to each other. Something has to give them a way
+to find each other and a way to know who they're talking to, and that something is
+**[Tailscale](https://tailscale.com)**.
+
+It has to be **the same tailnet and the same login on every machine.** That single fact is what makes the
+whole thing configuration-free: when a machine receives a push, it asks Tailscale *"whose machine is
+this?"* — and a machine owned by **you** needs nothing typed, no key exchanged, no token pasted. A machine
+owned by anybody else is refused before a byte moves.
+
+Free for personal use, and installing it is the only setup step that isn't `reed`.
+
+```sh
+tailscale status      # every machine you want reed on should be in this list
+```
+
+> **Not on a tailnet?** There is a manual path — `reed link NAME --addr HOST:PORT --token TOK` — where you
+> supply the address and a shared secret yourself. It works, and it is a fallback rather than the product:
+> you are doing by hand the two things Tailscale was doing for you.
+
+### 2 · Port 7380, reachable between them
+
+reed listens on **7380**. Over a tailnet that just works — Tailscale carries it. If you have a firewall of
+your own between two machines, that's the one to let through.
+
+### 3 · A supported machine, and somewhere to put things
+
+macOS (12+), Linux (glibc 2.31+), or Windows 10/11. reed keeps its history in `~/.reed`, so that has to be
+writable and have room — a workspace's history is roughly the size of the workspace plus its changes.
+
+**Not required:** node, npm, git, Docker, a package manager, or anything else. reed is one binary.
+
+> Every one of these is checked for you. Run **`reed doctor`** and it says which of them is wrong, in one
+> screen, with the thing to do about it.
 
 ## Install
 
@@ -39,8 +82,9 @@ Then, once per machine:
 reed up
 ```
 
-That's the setup. It starts at login and survives a reboot. Requires [Tailscale](https://tailscale.com) —
-that's the network reed runs over, and it's the only dependency.
+That's it. It starts at login and survives a reboot. You can read
+[`install.sh`](install.sh) before you pipe it into a shell — it's short, and it checks the SHA-256 of what it
+downloads against a signed list before anything is written.
 
 ## 60 seconds
 
@@ -80,29 +124,71 @@ this morning.
 | `reed peers` | whose work is waiting for you |
 | `reed merge` | take it |
 
-`reed status` is the dashboard. `reed doctor` tells you why it isn't working, in one screen. `reed help` is
-everything else.
+`reed status` is the dashboard. `reed doctor` tells you why it isn't working. `reed help` is everything else.
 
 ## How it works
 
-Every version of every file is stored by the hash of its content. Identical states cost nothing, so a
-snapshot on every change is affordable — and that one property quietly becomes dedup, delta transfer, undo
-and time-travel at the same time.
+### Everything is stored by what it is, not where it is
 
-Nothing is ever deleted. A removed file is a tombstone in history, never a destruction, so undo is free by
-construction rather than by feature.
+Every file is identified by a hash of its own content. Two identical files anywhere on any machine are one
+object. A file you change is a new object; every version that came before it still exists.
 
-And nothing routes through a datacenter. Two machines three feet apart talk to each other directly over your
-own tailnet.
+That one decision pays for almost everything else:
+
+- **Sending is cheap.** Before a push moves anything, the two machines compare addresses. A 900 KB
+  workspace with one line changed sends **284 bytes** — because everything else is already there. Re-pushing
+  something unchanged sends nothing at all.
+- **History is affordable.** A snapshot of every change would be ruinous if it copied files. Storing
+  addresses means an unchanged file costs one entry, so reed can record continuously rather than when you
+  remember to.
+- **Nothing is ever destroyed.** Deleting a file writes a tombstone into history; the content stays
+  addressable. Undo isn't a feature bolted on afterwards, it's a consequence of the shape.
+
+Large files are split into content-defined chunks, so changing one byte in the middle of a 1 GB file sends
+the chunk, not the file.
+
+### A daemon watches, and a push is a conversation
+
+`reed up` leaves a small daemon running. It watches the folder, and when something settles it records a
+snapshot — locally, immediately, with no network involved. Nothing you do ever waits on another machine.
+
+Delivery happens after. The daemon sends new work to the machines that have received this workspace before,
+retries a machine that's asleep, and stops asking politely rather than forever. A machine you have never
+pushed to is never sent anything: choosing a destination once is what subscribes it.
+
+### Arriving work is reviewed, not applied
+
+This is the part that makes reed different from a sync folder, and it's deliberate.
+
+If the other machine's work **can't cost you anything** — you haven't touched the folder since, so their
+snapshot simply continues yours — it's applied, and the daemon tells you what arrived.
+
+If you've **both** been editing, it does not guess. Their work lands as a branch you can see
+(`reed peers`), read (`reed diff`), open as a real folder and build (`reed open`), and take when you decide
+(`reed merge`). The merge is three-way against the state you last shared, so a change on their side and a
+change on yours in different places both survive. Where they genuinely collide, it says so and names the
+file instead of picking.
+
+Every sync tool that has ever lost somebody's work lost it by guessing. reed's answer is to not be in a
+position where guessing is required.
+
+### `node_modules` is not one directory, it's one per platform
+
+A build directory cannot be the same bytes on macOS and Linux, and pretending otherwise is how a folder
+sync breaks the machine it arrives on.
+
+reed stores that path as **one entry holding a real tree per platform.** Your Mac materialises the Mac
+build; the Linux box materialises the Linux one; both are in the same recorded state, so neither machine
+overwrites the other and they never ping-pong reinstalls.
+
+A machine that has no build of its own yet doesn't get an empty directory *or* somebody else's binaries. It
+gets every file that can be **proven** portable — pure JavaScript, and the `.bin` shims that point at it —
+plus a named list of exactly which packages need building locally. It requires affirmative evidence to copy
+anything, so anything it can't classify is withheld rather than guessed.
 
 ## Why it's different
 
 ### `node_modules` travels
-
-Every other sync tool answers this with an ignore rule, which throws away the thing you actually wanted.
-
-reed carries it — **one path holding a real build per platform**. A machine with no build of its own gets
-every file that can be *proven* portable, plus a named list of exactly what to install.
 
 Measured on a real project, macOS → Linux → Windows:
 
@@ -129,43 +215,18 @@ Three machines, four independent links, 2,880 more operations: all three folders
 
 ### It's fast because it's local
 
-No round trip to anywhere. On a LAN, a save is on the other machine before you've looked up.
+Nothing routes through a datacenter. Two machines three feet apart talk to each other directly, and a save
+is recorded on your own disk before the network is involved at all.
 
-## What's not built yet
+## Worth knowing
 
-Not the launch checklist — the **core**. These are real holes in the product, ranked by how likely they are
-to matter to you. We'd rather you read them here than find them at eleven at night.
-
-**Secrets are not special.** reed has no rule for `.env` or anything like it, so those files sync between
-your machines like every other file. Between machines you own that is often what you want, and it is
-absolutely not what you want by accident. Until there's a real policy, add the name to your exclusions.
-
-**`.gitignore` is not read.** Exclusions are a list of names — `.git`, `target`, `node_modules`, a sensible
-default set you can edit. That covers most of it and it is not the same thing, and if you are the kind of
-person who curates a `.gitignore` you will notice within a minute.
-
-**Everything is sent.** There's no lazy materialisation, so the first sync of a folder moves all of it. On a
-LAN that's fine. Across an ocean it is the difference between *instant* and *four minutes*, and it is the
-single biggest thing between reed and what reed is supposed to feel like.
-
-**Time travel has an engine and no handle.** Every version of every file is already kept, and
-`reed restore` puts the whole folder back. Putting *one file* back to *one moment* — the thing you actually
-want at eleven at night — is not built.
-
-**A forkable workspace is a primitive, not a command.** Copy the whole tree including uncommitted work, let
-something run in it for real, keep it or throw the world away. Measured at **256 MiB in 0.3 ms consuming
-nothing** — and there is no `reed branch` to reach it with.
-
-**reed tells you what to install; it doesn't install it.** When a `node_modules` arrives from another
-platform you get a named list of what needs building. Running it is still your job, once per platform.
-
-**Nothing understands your code.** A folder that could answer *"what changed since I was last here, and what
-did it mean"* — a function moved, a test now fails — is the thing that would make this indispensable to
-anything automated. It does not exist. It is the most interesting thing on this list and the furthest away.
-
-And the smaller true things: Tailscale is the network, so machines off your tailnet cannot be reached; this
-is for code directories and is not a backup; macOS and Linux are the daily drivers and Windows is the
-newest of the three; and macOS builds are not notarised yet, so Gatekeeper will ask the first time.
+- **This is for code directories.** Not general-purpose file sync, and not a backup — reed keeps history on
+  each machine, it does not keep a copy somewhere you can reach when the machine is gone.
+- **reed has no concept of a secret.** A `.env` sits in your folder and travels with it like anything else.
+  Between machines you own that is usually the point; if it isn't, add the name to your exclusions.
+- **`.gitignore` isn't read.** Exclusions are a list of names — `.git`, `target`, `node_modules` and other
+  sensible defaults — which you can edit.
+- **macOS builds aren't notarised yet**, so Gatekeeper will ask the first time.
 
 ## Is this open source?
 
@@ -174,10 +235,9 @@ newest of the three; and macOS builds are not notarised yet, so Gatekeeper will 
 **Two people build reed.** That's the whole team. Nobody else is working on this, and that single fact
 explains both halves of what you're looking at: how much is already here, and why the source isn't yet.
 
-What's shipped is the floor, not the building. [What's not built yet](#whats-not-built-yet) is the honest
-list, and every item on it changes the on-disk format or the wire. A format is a promise. Opening the
-source at the exact moment those are landing means asking people to build on shapes we are still moving,
-which is a worse gift than waiting.
+What's shipped is the floor, not the building — and the things going in next change the on-disk format and
+the wire. A format is a promise. Opening the source at the exact moment those are landing means asking
+people to build on shapes we are still moving, which is a worse gift than waiting.
 
 So: **the source opens.** Not as a favour and not as a maybe. Watch this repo and you'll know the day.
 
