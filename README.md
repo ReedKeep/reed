@@ -11,7 +11,7 @@
 
 > ### ⚠️ &nbsp;reed is **not** on npm or npx
 >
-> There is no `npm install reed` and no `npx reed`. Anything by that name on npm is **not us**.
+> There is no `npm install reed` and no `npx reed`. Anything by that name on npm is **not reed**.
 > Install with one of the commands below — those are the only places reed comes from.
 
 [What you need](#what-you-need) · [Install](#install) · [60 seconds](#60-seconds) · [How it works](#how-it-works) · [Why it's different](#why-its-different)
@@ -26,7 +26,7 @@ Not a copy you have to remember to make. Not a folder that silently overwrites y
 machines agree, either — when you've both been editing, the other machine's work arrives as **something you
 look at first**, and you take it when you're ready.
 
-No cloud. No account. No server we run. Your machines talk to each other.
+No cloud. No account. No server anywhere. Your machines talk to each other.
 
 Measured today, between a MacBook Air and an Ubuntu box over Tailscale, with nothing typed after the save:
 
@@ -42,8 +42,9 @@ Three things, and the first one is the one that matters.
 
 **This is not optional and it is not a suggestion — it is how reed works at all.**
 
-reed has no server. There is no account to make and nothing of yours passes through us, because there is no
-"us" in the path: your machines open a connection directly to each other. Something has to give them a way
+reed has no server. There is no account to make and nothing of yours passes through anything in the middle,
+because there is nothing in the middle: your machines open a connection directly to each other. Something has
+to give them a way
 to find each other and a way to know who they're talking to, and that something is
 **[Tailscale](https://tailscale.com)**.
 
@@ -102,18 +103,13 @@ irm https://raw.githubusercontent.com/ReedKeep/reed/main/install.ps1 | iex; reed
 ```
 
 One line, and `reed up` is the only thing you ever run per machine — it starts at login and survives a
-reboot. **Upgrading later is one word:**
+reboot.
+
+Upgrading later is one word:
 
 ```sh
 reed update
 ```
-
-It takes the newest release, (Installed with Homebrew? It will point you at `brew upgrade reed`,
-which is brew's job rather than reed's.)
-
-You can read [`install.sh`](install.sh) before you pipe it into a shell. It's short, and it checks the
-SHA-256 of everything it downloads against a published list before a byte is written to your disk. The macOS
-build is signed with an Apple Developer ID and notarised, so Gatekeeper lets it run without argument.
 
 ## 60 seconds
 
@@ -264,29 +260,23 @@ is recorded on your own disk before the network is involved at all.
   Between machines you own that is usually the point; if it isn't, add the name to your exclusions.
 - **`.gitignore` isn't read.** Exclusions are a list of names — `.git`, `target`, `node_modules` and other
   sensible defaults — which you can edit.
-- **Windows and Linux binaries are not code-signed.** The macOS one is (Developer ID, notarised by Apple).
-  On the other two, the SHA-256 check in the installer is what stands between you and whatever arrived.
 
 ## Is this open source?
 
-**Not yet. It will be — and it's worth saying exactly why not, because it isn't a moat.**
+**Not yet — and it will be.** The reason is worth one paragraph, because it isn't a moat.
 
-**Two people build reed.** That's the whole team. Nobody else is working on this, and that single fact
-explains both halves of what you're looking at: how much is already here, and why the source isn't yet.
+What's shipped is the floor, not the building. The next things to land change the on-disk format and the
+wire, and a format is a promise. Opening the source at the exact moment those are moving would be asking
+people to build on shapes that are still moving — a worse gift than waiting.
 
-What's shipped is the floor, not the building — and the things going in next change the on-disk format and
-the wire. A format is a promise. Opening the source at the exact moment those are landing means asking
-people to build on shapes we are still moving, which is a worse gift than waiting.
+So: **the source opens.** Not as a favour, not as a maybe. Watch this repo and you'll know the day.
 
-So: **the source opens.** Not as a favour and not as a maybe. Watch this repo and you'll know the day.
-
-Everything else is already here: releases, the install scripts you can read before you pipe them into a
-shell, issues, and the changelog. File a bug and one of the two of us reads it.
+Everything else is already here — releases, the install scripts, issues, the changelog. File a bug and it
+gets read.
 
 ## What changed, and when
 
-Every release and what is in it: **[CHANGELOG.md](CHANGELOG.md)**. `reed update` prints the link when it
-takes a new version, so you never have to go looking.
+Every release and what is in it: **[CHANGELOG.md](CHANGELOG.md)**.
 
 ## Get in touch
 

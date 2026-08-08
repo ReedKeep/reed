@@ -40,6 +40,18 @@ want to hear about it:
   `reed doctor` checks and reports the mode; it deliberately does not silently repair it.
 - **Nothing leaves your machines.** No telemetry, no phone-home, no account.
 
+## How the binaries reach you
+
+Stated here rather than on the front page, because it is the whole picture or it is misleading:
+
+- Every release publishes a `SHA256SUMS` generated from the bytes that were uploaded, and both installers
+  refuse a download whose hash is not in it.
+- The **macOS** build is signed with an Apple Developer ID and notarised by Apple.
+- The **Linux** and **Windows** builds are **not** code-signed. On those two, the checksum is the only thing
+  standing between you and whatever arrived.
+- Releases are cut by hand from a machine with a person at it. No credential of any kind — signing key,
+  notarisation password or release token — lives in this repository, in its history, or in CI.
+
 ## Supported versions
 
 reed is pre-1.0 and moves quickly. Fixes land on the latest release; there are no backports yet.
