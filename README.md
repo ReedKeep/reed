@@ -28,6 +28,12 @@ look at first**, and you take it when you're ready.
 
 No cloud. No account. No server we run. Your machines talk to each other.
 
+Measured today, between a MacBook Air and an Ubuntu box over Tailscale, with nothing typed after the save:
+
+```
+mac → linux   2.8s          linux → mac   2.3s
+```
+
 ## What you need
 
 Three things, and the first one is the one that matters.
@@ -83,10 +89,10 @@ the workspace plus its changes.
 curl -fsSL https://raw.githubusercontent.com/ReedKeep/reed/main/install.sh | sh && reed up
 ```
 
-**Homebrew** — the formula lives in this repo, so `tap` takes the URL:
+**Homebrew**
 
 ```sh
-brew tap ReedKeep/reed https://github.com/ReedKeep/reed && brew trust reedkeep/reed && brew install reed && reed up
+brew install ReedKeep/reed/reed && reed up
 ```
 
 **Windows**
@@ -95,19 +101,20 @@ brew tap ReedKeep/reed https://github.com/ReedKeep/reed && brew trust reedkeep/r
 irm https://raw.githubusercontent.com/ReedKeep/reed/main/install.ps1 | iex; reed up
 ```
 
-Each of those is one line you can paste. `reed up` is the only thing you run per machine — it starts at
-login and survives a reboot.
+One line, and `reed up` is the only thing you ever run per machine — it starts at login and survives a
+reboot. **Upgrading later is one word:**
 
-After that, upgrading is **`reed update`** — it takes the newest release, checks its SHA-256, and restarts the
-service, because replacing the file does not change the process already running. (If you installed with
-Homebrew it will tell you to use `brew upgrade reed`, which is brew's job rather than reed's.)
+```sh
+reed update
+```
 
-You can read [`install.sh`](install.sh) before you pipe it into a shell — it's short, and it checks the
-SHA-256 of what it downloads against a published list before anything is written to your disk.
+It takes the newest release, checks its SHA-256, and restarts the service — because replacing the file does
+not change the process already running. (Installed with Homebrew? It will point you at `brew upgrade reed`,
+which is brew's job rather than reed's.)
 
-> `brew trust` is asked for once. Homebrew only skips it for taps in a repo literally named
-> `homebrew-something`, and reed keeps its formula [here](Formula/reed.rb) rather than in a second
-> repository — one place to look, one extra word to type.
+You can read [`install.sh`](install.sh) before you pipe it into a shell. It's short, and it checks the
+SHA-256 of everything it downloads against a published list before a byte is written to your disk. The macOS
+build is signed with an Apple Developer ID and notarised, so Gatekeeper lets it run without argument.
 
 ## 60 seconds
 
@@ -146,10 +153,17 @@ this morning.
 | `reed push` | send this folder to one of them |
 | `reed peers` | whose work is waiting for you |
 | `reed merge` | take it |
+
+That's the whole product. Four more you'll want eventually:
+
+| | |
+|---|---|
+| `reed status` | the dashboard — what's here, what's waiting, who's behind |
+| `reed doctor` | why it isn't working, in one screen, with the thing to do |
+| `reed stop NAME` | stop sending **this** folder to that machine. Nothing there is deleted |
 | `reed update` | put this machine on the newest release |
 
-`reed status` is the dashboard. `reed doctor` tells you why it isn't working. **`reed update` puts you on the
-newest version and restarts the service.** `reed help` is everything else.
+`reed help` is everything else.
 
 ## How it works
 
@@ -251,7 +265,8 @@ is recorded on your own disk before the network is involved at all.
   Between machines you own that is usually the point; if it isn't, add the name to your exclusions.
 - **`.gitignore` isn't read.** Exclusions are a list of names — `.git`, `target`, `node_modules` and other
   sensible defaults — which you can edit.
-- **macOS builds aren't notarised yet**, so Gatekeeper will ask the first time.
+- **Windows and Linux binaries are not code-signed.** The macOS one is (Developer ID, notarised by Apple).
+  On the other two, the SHA-256 check in the installer is what stands between you and whatever arrived.
 
 ## Is this open source?
 
@@ -268,6 +283,11 @@ So: **the source opens.** Not as a favour and not as a maybe. Watch this repo an
 
 Everything else is already here: releases, the install scripts you can read before you pipe them into a
 shell, issues, and the changelog. File a bug and one of the two of us reads it.
+
+## What changed, and when
+
+Every release and what is in it: **[CHANGELOG.md](CHANGELOG.md)**. `reed update` prints the link when it
+takes a new version, so you never have to go looking.
 
 ## Get in touch
 
