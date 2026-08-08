@@ -108,8 +108,7 @@ reboot. **Upgrading later is one word:**
 reed update
 ```
 
-It takes the newest release, checks its SHA-256, and restarts the service — because replacing the file does
-not change the process already running. (Installed with Homebrew? It will point you at `brew upgrade reed`,
+It takes the newest release, (Installed with Homebrew? It will point you at `brew upgrade reed`,
 which is brew's job rather than reed's.)
 
 You can read [`install.sh`](install.sh) before you pipe it into a shell. It's short, and it checks the
