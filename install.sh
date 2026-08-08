@@ -135,12 +135,17 @@ main() {
             ;;
     esac
 
-    say ""
-    say "  reed up      turn it on — starts at login, survives a reboot"
-    say "  reed make    in a folder you want on every machine"
-    say "  reed push    send it to one of them"
-    say ""
-    say "  reed doctor  if anything is not working, this says why"
+    # **The onboarding block is for somebody who has just met reed.** `reed update` runs this same script and
+    # already knows what reed is, so telling it to run `reed make` is noise in the middle of an upgrade — and
+    # noise in a tool's output is how people learn to stop reading it.
+    if [ -z "${REED_NO_HINTS:-}" ]; then
+        say ""
+        say "  reed up      turn it on — starts at login, survives a reboot"
+        say "  reed make    in a folder you want on every machine"
+        say "  reed push    send it to one of them"
+        say ""
+        say "  reed doctor  if anything is not working, this says why"
+    fi
 }
 
 # `/usr/local/bin` if we can write there, `~/.local/bin` otherwise.
