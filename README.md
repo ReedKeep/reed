@@ -98,6 +98,10 @@ irm https://raw.githubusercontent.com/ReedKeep/reed/main/install.ps1 | iex; reed
 Each of those is one line you can paste. `reed up` is the only thing you run per machine — it starts at
 login and survives a reboot.
 
+After that, upgrading is **`reed update`** — it takes the newest release, checks its SHA-256, and restarts the
+service, because replacing the file does not change the process already running. (If you installed with
+Homebrew it will tell you to use `brew upgrade reed`, which is brew's job rather than reed's.)
+
 You can read [`install.sh`](install.sh) before you pipe it into a shell — it's short, and it checks the
 SHA-256 of what it downloads against a published list before anything is written to your disk.
 
@@ -142,8 +146,10 @@ this morning.
 | `reed push` | send this folder to one of them |
 | `reed peers` | whose work is waiting for you |
 | `reed merge` | take it |
+| `reed update` | put this machine on the newest release |
 
-`reed status` is the dashboard. `reed doctor` tells you why it isn't working. `reed help` is everything else.
+`reed status` is the dashboard. `reed doctor` tells you why it isn't working. **`reed update` puts you on the
+newest version and restarts the service.** `reed help` is everything else.
 
 ## How it works
 
