@@ -28,7 +28,7 @@ look at first**, and you take it when you're ready.
 
 No cloud. No account. No server anywhere. Your machines talk to each other.
 
-Measured today, between a MacBook Air and an Ubuntu box over Tailscale, with nothing typed after the save:
+Measured between a MacBook Air and an Ubuntu box over Tailscale, with nothing typed after the save:
 
 ```
 mac → linux   2.8s          linux → mac   2.3s
@@ -59,9 +59,8 @@ Free for personal use, and installing it is the only setup step that isn't `reed
 tailscale status      # every machine you want reed on should be in this list
 ```
 
-> **Not on a tailnet?** There is a manual path — `reed link NAME --addr HOST:PORT --token TOK` — where you
-> supply the address and a shared secret yourself. It works, and it is a fallback rather than the product:
-> you are doing by hand the two things Tailscale was doing for you.
+> **Not on a tailnet?** `reed link NAME --addr HOST:PORT --token TOK` does it by hand — you supply the
+> address and the secret yourself. It works, and it's the long way round.
 
 ### 2 · Port 7380, reachable between them
 
@@ -74,8 +73,7 @@ macOS (12+, Intel or Apple Silicon), Linux x86_64 (glibc 2.31+), or Windows 10/1
 history in `~/.reed`, so that has to be writable and have room — a workspace's history is roughly the size of
 the workspace plus its changes.
 
-**Linux on ARM is not built yet.** The code is portable and there is simply no machine here to build it on;
-`cargo install --path crates/reed` works if you have the source.
+**Linux on ARM isn't available yet.** It's coming.
 
 **Not required:** node, npm, git, Docker, a package manager, or anything else. reed is one binary.
 
@@ -263,16 +261,13 @@ is recorded on your own disk before the network is involved at all.
 
 ## Is this open source?
 
-**Not yet — and it will be.** The reason is worth one paragraph, because it isn't a moat.
-
-What's shipped is the floor, not the building. The next things to land change the on-disk format and the
-wire, and a format is a promise. Opening the source at the exact moment those are moving would be asking
-people to build on shapes that are still moving — a worse gift than waiting.
+**Not yet — and it will be.** The on-disk format and the wire are still moving, and a format is a promise.
+Opening the source while those shift would be asking people to build on something that isn't settled.
 
 So: **the source opens.** Not as a favour, not as a maybe. Watch this repo and you'll know the day.
 
-Everything else is already here — releases, the install scripts, issues, the changelog. File a bug and it
-gets read.
+Everything else is here now — releases, the install scripts, issues, the changelog. File a bug and it gets
+read.
 
 ## What changed, and when
 
