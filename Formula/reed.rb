@@ -14,19 +14,19 @@ class Reed < Formula
   # The source is not published yet. `:cannot_represent` is the honest answer here, not `:proprietary`,
   # which Homebrew does not have.
   license :cannot_represent
-  version "0.1.0"
+  version "0.1.1"
 
   on_macos do
     # One universal binary: the installer asks `uname -s` and nothing else on Darwin, so Intel and Apple
     # Silicon take the same file and the kernel picks.
-    url "https://github.com/ReedKeep/reed/releases/download/v0.1.0/reed-macos-universal.tar.gz"
-    sha256 "e2a06193b3850047d14078b08b30cdf38bfdf8ca9e3903f945290a3aecc804ce"
+    url "https://github.com/ReedKeep/reed/releases/download/v0.1.1/reed-macos-universal.tar.gz"
+    sha256 "a7242e5e443702dac14a030b3dc6496ff46c93794d4b2eac46223e2fb70308e5"
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/ReedKeep/reed/releases/download/v0.1.0/reed-linux-x86_64.tar.gz"
-      sha256 "5a6b9ec4549bf409aa9befa33a959a2410ab7aa3f640c4e227b24c7f46011f08"
+      url "https://github.com/ReedKeep/reed/releases/download/v0.1.1/reed-linux-x86_64.tar.gz"
+      sha256 "c275d4baeb9b81ef74464f43738a88b6dc83434949aa8ff5ea3ec3bcbb1dd762"
     end
     on_arm do
       # No ARM Linux build yet: there is no machine here to build one on. Saying so beats a 404, and
