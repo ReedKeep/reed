@@ -109,7 +109,25 @@ main() {
     say "               $dir/reed"
 
     case ":$PATH:" in
-        *":$dir:"*) ;;
+        *":$dir:"*)
+            # **Installed, and shadowed by a different one.** A `reed` earlier on PATH — an older copy
+            # somebody once put in /usr/local/bin with sudo — means typing `reed` still runs that, and this
+            # installer has just reported a version the shell will not give you.
+            #
+            # Not hypothetical: measured on a real box, where `install.sh` printed `installed reed 0.1.1
+            # ~/.local/bin/reed` and `reed --version` answered **0.0.1** for the rest of the session. Every
+            # symptom after that points at the product rather than at the PATH.
+            #
+            # `command -v` asks the shell the same question the user's next command will.
+            onpath=$(command -v reed 2>/dev/null || true)
+            if [ -n "$onpath" ] && [ "$onpath" != "$dir/reed" ]; then
+                say ""
+                say "  BUT typing \`reed\` still runs a different one, earlier on your PATH:"
+                say "      $onpath  ($("$onpath" --version 2>/dev/null || echo "cannot say"))"
+                say "  Remove it, or put $dir first:"
+                say "      rm $onpath        # may need sudo if it is not yours"
+            fi
+            ;;
         *)
             say ""
             say "  $dir is not on your PATH. Add this to your shell profile:"
