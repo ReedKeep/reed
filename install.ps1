@@ -97,11 +97,16 @@ try {
     }
 
     Say ''
-    Say '  reed up      turn it on — starts at login, survives a reboot'
-    Say '  reed make    in a folder you want on every machine'
-    Say '  reed push    send it to one of them'
-    Say ''
-    Say '  reed doctor  if anything is not working, this says why'
+    # The onboarding block is for somebody who has just met reed. `reed update` runs this same script and
+    # already knows what reed is, so telling it to run `reed make` is noise in the middle of an upgrade —
+    # and noise in a tool's output is how people learn to stop reading it. Same switch as install.sh.
+    if (-not $env:REED_NO_HINTS) {
+        Say '  reed up      turn it on — starts at login, survives a reboot'
+        Say '  reed make    in a folder you want on every machine'
+        Say '  reed push    send it to one of them'
+        Say ''
+        Say '  reed doctor  if anything is not working, this says why'
+    }
 } finally {
     Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
 }
